@@ -1,5 +1,6 @@
 const path = require('path');
 const { camelCase, startCase } = require('lodash');
+const { getGeneratedFilePath } = require('../app/app.service');
 
 const getTemplatePath = () => {
   const componentTemplatePath = path.join('.', 'templates', 'component.ejs');
@@ -11,11 +12,22 @@ const getTemplatePath = () => {
 const getComponentName = (options) => {
   const { component: componentName } = options;
   const componentNamePascalCase = startCase(camelCase(componentName)).replace(
-    ' ',
+    / /g,
     '',
   );
 
   return { componentName, componentNamePascalCase };
 };
 
-module.exports = { getTemplatePath, getComponentName };
+const getComponentImportStatement = (options) => {
+  const { componentNamePascalCase } = getComponentName(options);
+  const componentImportPath = getGeneratedFilePath('component', options);
+
+  return `import ${componentNamePascalCase} from '${componentImportPath}'`;
+};
+
+module.exports = {
+  getTemplatePath,
+  getComponentName,
+  getComponentImportStatement,
+};

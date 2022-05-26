@@ -1,4 +1,5 @@
 const path = require('path');
+const { last, startCase, camelCase } = require('lodash');
 
 const getGeneratedFilePath = (fileType, options) => {
   /**
@@ -25,6 +26,15 @@ const getGeneratedFilePath = (fileType, options) => {
 
   const { [typeOption]: fileName, path: filePath } = options;
 
+  const fileNameArray = fileName.split('-');
+  const filePathNameArray = fileName.split('/');
+  const isFileWithPath = filePathNameArray.length > 1;
+  const isMultiWordsFile = fileNameArray.length > 1 && !isFileWithPath;
+
+  if (isFileWithPath) {
+    fileName = last(filePathNameArray);
+  }
+
   let fileFullName;
 
   switch (fileType) {
@@ -33,14 +43,18 @@ const getGeneratedFilePath = (fileType, options) => {
       break;
     case 'style':
       fileFullName = path.join('styles', `${fileName}.css`);
+      break;
+    case 'store':
+      fileFullName = `${fileName}.store.ts`;
+      break;
   }
-
-  const fileNameArray = fileName.split('-');
-  const isMultiWordsFile = fileNameArray.length > 1;
 
   let fileFullPath = [];
 
-  if (filePath) {
+  if (isFileWithPath) {
+    filePathNameArray.pop();
+    fileFullPath = ['src', ...filePathNameArray, fileFullName];
+  } else if (filePath) {
     const filePathArray = filePath.split('/');
     fileFullPath = ['src', ...filePathArray, fileFullName];
   } else if (isMultiWordsFile) {
@@ -52,4 +66,72 @@ const getGeneratedFilePath = (fileType, options) => {
   return path.join(...fileFullPath);
 };
 
-module.exports = { getGeneratedFilePath };
+const getParentFilePath = (fileType, options) => {
+  let { parent, component: fileName } = options;
+  let fileExtension = '';
+
+  switch (fileType) {
+    case 'component':
+      fileExtension = '.vue';
+      break;
+    case 'style':
+      fileExtension = '.css';
+      fileName = fileName + '.css';
+      break;
+  }
+
+  let parentFilePath = [];
+  const parentArray = parent.split('/');
+  const parentFileName = last(parentArray) + fileExtension;
+
+  if (parentArray.length > 1) {
+    parentArray.pop();
+    parentFilePath = ['src', ...parentArray, parentFileName];
+    if (fileType === 'style') {
+      parentFilePath = ['src', ...parentArray, 'styles', fileName];
+    }
+  } else {
+    parentFilePath = ['src', parent, parentFileName];
+  }
+
+  return path.join(...parentFilePath);
+};
+
+const getParentName = (options) => {
+  return last(options.parent.split('/'));
+};
+
+const getParentImportPath = (fileType, options) => {
+  const { [fileType]: fileName, path: filePath } = options;
+
+  let fileFullName;
+
+  switch (fileType) {
+    case 'component':
+      fileFullName = fileName;
+      break;
+  }
+
+  const fileNameArray = fileName.split('-');
+  const isMultiWordsFile = fileNameArray.length > 1;
+
+  let fileImportPath = [];
+
+  if (filePath) {
+    const filePathArray = filePath.split('/');
+    fileImportPath = ['@', ...filePathArray, fileFullName];
+  } else if (isMultiWordsFile) {
+    fileImportPath = ['@', ...fileNameArray, fileFullName];
+  } else {
+    fileImportPath = ['@', fileName, fileFullName];
+  }
+
+  return fileImportPath.join('/');
+};
+
+module.exports = {
+  getGeneratedFilePath,
+  getParentFilePath,
+  getParentName,
+  getParentImportPath,
+};
