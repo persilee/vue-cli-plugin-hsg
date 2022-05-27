@@ -2,14 +2,17 @@ const appGenerator = require('./app/app.generator');
 const componentGenerator = require('./component/component.generator');
 const storeGenerator = require('./store/store.generator');
 const storeGeneratorHook = require('./store/store.generator.hook');
+const viewGenerator = require('./view/view.generator');
 
 module.exports = (api, options) => {
+  console.log(options);
   // 添加命令到package.json
   appGenerator(api, options);
   // 生成组件
   componentGenerator(api, options);
   // 生成store
   storeGenerator(api, options);
+  viewGenerator(api, options);
 };
 
 module.exports.hooks = (api, options) => {

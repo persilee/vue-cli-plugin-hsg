@@ -6,7 +6,6 @@ const {
 } = require('./store.service');
 
 const storeGenerator = (api, options) => {
-  console.log('options:', options);
   if (!options.store) return;
 
   const storeTemplatePath = getStoreTemplatePath();

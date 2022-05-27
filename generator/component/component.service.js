@@ -10,7 +10,11 @@ const getTemplatePath = () => {
 };
 
 const getComponentName = (options) => {
-  const { component: componentName } = options;
+  let componentKey = 'component';
+  if (options.view) {
+    componentKey = 'view';
+  }
+  const { [componentKey]: componentName } = options;
   const componentNamePascalCase = startCase(camelCase(componentName)).replace(
     / /g,
     '',
