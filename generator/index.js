@@ -12,6 +12,7 @@ module.exports = (api, options) => {
   componentGenerator(api, options);
   // 生成store
   storeGenerator(api, options);
+  // 生成view模块
   viewGenerator(api, options);
 };
 

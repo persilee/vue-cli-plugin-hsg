@@ -51,6 +51,9 @@ const getGeneratedFilePath = (fileType, options) => {
     case 'store':
       fileFullName = `${fileName}.store.ts`;
       break;
+    case 'routes':
+      fileFullName = `${fileName}.routes.ts`;
+      break;
   }
 
   let fileFullPath = [];
