@@ -5,7 +5,6 @@ const storeGeneratorHook = require('./store/store.generator.hook');
 const viewGenerator = require('./view/view.generator');
 
 module.exports = (api, options) => {
-  console.log(options);
   // 添加命令到package.json
   appGenerator(api, options);
   // 生成组件

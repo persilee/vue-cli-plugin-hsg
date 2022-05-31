@@ -15,17 +15,33 @@ const {
   getRoutesName,
   getRoutesImportPath,
 } = require('./view.service');
+const chalk = require('chalk');
 
 const viewGenerator = (api, options) => {
-  if (options.view == '' || options.view == true) {
+  if (options.component || options.store) return;
+  if (!options.view || options.view == true) {
+    api.exitLog(chalk.bold.red('请输入组件名称！🚨🚨🚨'), 'error');
     api.exitLog(
-      '请输入组件名称！\n例如：\nnpm run gv -- history-query  --path views/accountManagement/transactionHistoryQuery \nhistory-query：为组件名称（必填） \n--path：为组件的存放路径（必填）',
-      'error',
+      chalk.hex(
+        '#FFA500',
+      )(`例如：npm run gv -- history-query  --path views/accountManagement/transactionHistoryQuery
+      history-query：为组件名称（必填）
+      --path：为组件的存放路径（必填）`),
+      'warn',
+    );
+    return;
+  } else if (!options.path || options.path == true) {
+    api.exitLog(chalk.bold.red('请指定路径！⛳️⛳️⛳️'), 'error');
+    api.exitLog(
+      chalk.hex(
+        '#FFA500',
+      )(`例如：npm run gv -- history-query  --path views/accountManagement/transactionHistoryQuery
+      history-query：为组件名称（必填）
+      --path：为组件的存放路径（必填）`),
+      'warn',
     );
     return;
   }
-
-  console.log('options.view:', options.view);
 
   const generatedComponentPath = getGeneratedFilePath('component', options);
 
