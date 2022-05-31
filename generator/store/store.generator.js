@@ -1,8 +1,12 @@
-const { getGeneratedFilePath } = require('../app/app.service');
+const {
+  getGeneratedFilePath,
+  getParentFilePath,
+} = require('../app/app.service');
 const {
   getStoreTemplatePath,
   getStoreStateName,
   getStoreModuleName,
+  getStoreImportStatement,
 } = require('./store.service');
 const chalk = require('chalk');
 
@@ -32,6 +36,16 @@ const storeGenerator = (api, options) => {
     },
     { storeStateName, storeModuleName },
   );
+
+  if (options.parent) {
+    const parentStorePath = getParentFilePath('store', options);
+    const storeImportStatement = getStoreImportStatement(options);
+
+    console.log('parentStorePath:', parentStorePath);
+    console.log('storeImportStatement:', storeImportStatement);
+
+    api.injectImports(parentStorePath, storeImportStatement);
+  }
 };
 
 module.exports = storeGenerator;

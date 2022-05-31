@@ -1,6 +1,13 @@
 const path = require('path');
 const { last, startCase, camelCase } = require('lodash');
 
+/**
+ * 生成文件存放路径
+ *
+ * @param {*} fileType
+ * @param {*} options
+ * @return {*}
+ */
 const getGeneratedFilePath = (fileType, options) => {
   /**
    * 文件生成规则
@@ -73,6 +80,13 @@ const getGeneratedFilePath = (fileType, options) => {
   return path.join(...fileFullPath);
 };
 
+/**
+ * 生成parent的路径
+ *
+ * @param {*} fileType
+ * @param {*} options
+ * @return {*}
+ */
 const getParentFilePath = (fileType, options) => {
   let { parent, component: fileName } = options;
   let fileExtension = '';
@@ -84,6 +98,9 @@ const getParentFilePath = (fileType, options) => {
     case 'style':
       fileExtension = '.css';
       fileName = fileName + '.css';
+      break;
+    case 'store':
+      fileExtension = '.store.ts';
       break;
   }
 
@@ -104,10 +121,23 @@ const getParentFilePath = (fileType, options) => {
   return path.join(...parentFilePath);
 };
 
+/**
+ * 取parent路径的最后一个单词为名字
+ *
+ * @param {*} options
+ * @return {*}
+ */
 const getParentName = (options) => {
   return last(options.parent.split('/'));
 };
 
+/**
+ * 生成 import 的路径
+ *
+ * @param {*} fileType
+ * @param {*} options
+ * @return {*}
+ */
 const getParentImportPath = (fileType, options) => {
   const { [fileType]: fileName, path: filePath } = options;
 
@@ -116,6 +146,9 @@ const getParentImportPath = (fileType, options) => {
   switch (fileType) {
     case 'component':
       fileFullName = fileName;
+      break;
+    case 'store':
+      fileFullName = `${fileName}.store`;
       break;
   }
 
@@ -136,9 +169,42 @@ const getParentImportPath = (fileType, options) => {
   return fileImportPath.join('/');
 };
 
+/**
+ * 获取文件内容
+ *
+ * @param {*} filePath
+ * @param {*} api
+ * @return {*}
+ */
+const getProjectFileContent = (filePath, api) => {
+  const file = api.generator.files[filePath];
+  return file.split(/\r?\n/g);
+};
+
+/**
+ * 在文件里插入内容
+ *
+ * @param {*} [options={}]
+ * @return {*}
+ */
+const insertFileContent = (options = {}) => {
+  const { fileContent, find, insert } = options;
+  const lineIndex = fileContent.findIndex((line) => line.match(RegExp(find)));
+
+  if (Array.isArray(insert)) {
+    fileContent.splice(lineIndex + 1, 0, ...insert);
+  } else {
+    fileContent.splice(lineIndex + 1, 0, insert);
+  }
+
+  return fileContent;
+};
+
 module.exports = {
   getGeneratedFilePath,
   getParentFilePath,
   getParentName,
   getParentImportPath,
+  getProjectFileContent,
+  insertFileContent,
 };
