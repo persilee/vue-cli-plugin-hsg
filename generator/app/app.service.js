@@ -88,6 +88,9 @@ const getGeneratedFilePath = (fileType, options) => {
  * @return {*}
  */
 const getParentFilePath = (fileType, options) => {
+  if (options.view) {
+    options.parent = 'app/app';
+  }
   let { parent, component: fileName } = options;
   let fileExtension = '';
 

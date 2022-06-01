@@ -30,6 +30,7 @@ const storeGenerator = (api, options) => {
   const storeModuleName = getStoreModuleName(options);
   const generatedStorePath = getGeneratedFilePath('store', options);
 
+  // 生成store文件
   api.render(
     {
       [generatedStorePath]: storeTemplatePath,
@@ -40,10 +41,6 @@ const storeGenerator = (api, options) => {
   if (options.parent) {
     const parentStorePath = getParentFilePath('store', options);
     const storeImportStatement = getStoreImportStatement(options);
-
-    console.log('parentStorePath:', parentStorePath);
-    console.log('storeImportStatement:', storeImportStatement);
-
     api.injectImports(parentStorePath, storeImportStatement);
   }
 };

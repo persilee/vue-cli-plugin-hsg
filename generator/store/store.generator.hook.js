@@ -9,8 +9,13 @@ const {
 
 const storeGeneratorHook = (api, options) => {
   api.afterInvoke(() => {
+    if (options.view) {
+      options.parent = 'app/app';
+      options.store = options.view;
+    }
     if (!options.store || !options.parent) return;
     let moduleName = '';
+    let insertModuleName = '';
     const { parent: parentStore } = options;
     const storeStateName = getStoreStateName(options);
     const storeModuleName = getStoreModuleName(options);
@@ -18,14 +23,17 @@ const storeGeneratorHook = (api, options) => {
     let parentFileContent = getProjectFileContent(parentStorePath, api);
     let findParentStoreState;
 
-    if (!options.module) {
-      moduleName = storeModuleName;
-    }
-
     if (parentStore === 'app/app') {
       findParentStoreState = 'export interface RootState';
     } else {
       findParentStoreState = 'export interface .+StoreState';
+    }
+
+    if (!options.module) {
+      moduleName = storeModuleName;
+      insertModuleName = `    ${moduleName},`;
+    } else {
+      insertModuleName = `    ${moduleName}: ${storeModuleName},`;
     }
 
     // 在定义的state里新增类型
@@ -46,7 +54,7 @@ const storeGeneratorHook = (api, options) => {
     parentFileContent = insertFileContent({
       fileContent: parentFileContent,
       find: 'modules: {',
-      insert: `    ${moduleName}: ${storeModuleName},`,
+      insert: insertModuleName,
     });
 
     fs.writeFileSync(

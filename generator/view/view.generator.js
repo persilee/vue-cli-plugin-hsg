@@ -1,13 +1,16 @@
-const { getGeneratedFilePath } = require('../app/app.service');
+const {
+  getGeneratedFilePath,
+  getParentFilePath,
+} = require('../app/app.service');
 const {
   getTemplatePath,
   getComponentName,
-  getComponentImportStatement,
 } = require('../component/component.service');
 const {
   getStoreTemplatePath,
   getStoreStateName,
   getStoreModuleName,
+  getStoreImportStatement,
 } = require('../store/store.service');
 const {
   getRoutesPath,
@@ -62,6 +65,7 @@ const viewGenerator = (api, options) => {
   const routesPath = getRoutesPath(options);
   const routesImportPath = getRoutesImportPath(options);
 
+  // 生成 component 和 style
   api.render(
     {
       [generatedComponentPath]: componentTemplatePath,
@@ -73,6 +77,7 @@ const viewGenerator = (api, options) => {
     },
   );
 
+  // 生成 store
   api.render(
     {
       [generatedStorePath]: storeTemplatePath,
@@ -80,6 +85,12 @@ const viewGenerator = (api, options) => {
     { storeStateName, storeModuleName },
   );
 
+  // 在parent里导入store模块
+  const parentStorePath = getParentFilePath('store', options);
+  const storeImportStatement = getStoreImportStatement(options);
+  api.injectImports(parentStorePath, storeImportStatement);
+
+  // 生成 routes
   api.render(
     {
       [generatedRoutesPath]: routesTemplatePath,

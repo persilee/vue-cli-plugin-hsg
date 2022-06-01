@@ -16,5 +16,6 @@ module.exports = (api, options) => {
 };
 
 module.exports.hooks = (api, options) => {
+  // 在父模块里导入子模块和添加state和module
   storeGeneratorHook(api, options);
 };
