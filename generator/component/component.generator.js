@@ -10,8 +10,7 @@ const {
 const chalk = require('chalk');
 
 const componentGenerator = (api, options) => {
-  if (options.view || options.store) return;
-  if (!options.component || options.component == true) {
+  if (options.component == true) {
     api.exitLog(chalk.bold.red('请输入组件名称！🚨🚨🚨'), 'error');
     api.exitLog(
       chalk.hex(
@@ -26,7 +25,6 @@ const componentGenerator = (api, options) => {
   }
 
   const generatedComponentPath = getGeneratedFilePath('component', options);
-  console.log(generatedComponentPath);
 
   let generatedStylePath;
   if (options.parent) {
@@ -36,9 +34,8 @@ const componentGenerator = (api, options) => {
   }
 
   const { componentTemplatePath, styleTemplatePath } = getTemplatePath();
-
   const { componentName, componentNamePascalCase } = getComponentName(options);
-  console.log(generatedStylePath);
+
   api.render(
     {
       [generatedComponentPath]: componentTemplatePath,

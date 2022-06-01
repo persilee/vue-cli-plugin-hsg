@@ -11,8 +11,7 @@ const {
 const chalk = require('chalk');
 
 const storeGenerator = (api, options) => {
-  if (options.component || options.view) return;
-  if (!options.store || options.store == true) {
+  if (options.store == true) {
     api.exitLog(chalk.bold.red('请输入Store的名称！🏦🏦🏦'), 'error');
     api.exitLog(
       chalk.hex(

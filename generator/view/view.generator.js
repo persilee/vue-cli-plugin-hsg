@@ -21,8 +21,7 @@ const {
 const chalk = require('chalk');
 
 const viewGenerator = (api, options) => {
-  if (options.component || options.store) return;
-  if (!options.view || options.view == true) {
+  if (options.view == true) {
     api.exitLog(chalk.bold.red('请输入组件名称！🚨🚨🚨'), 'error');
     api.exitLog(
       chalk.hex(

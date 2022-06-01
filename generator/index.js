@@ -8,11 +8,11 @@ module.exports = (api, options) => {
   // 添加命令到package.json
   appGenerator(api, options);
   // 生成组件
-  componentGenerator(api, options);
+  if (options.component) componentGenerator(api, options);
   // 生成store
-  storeGenerator(api, options);
+  if (options.store) storeGenerator(api, options);
   // 生成view模块
-  viewGenerator(api, options);
+  if (options.view) viewGenerator(api, options);
 };
 
 module.exports.hooks = (api, options) => {

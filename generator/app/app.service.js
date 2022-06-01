@@ -27,8 +27,6 @@ const getGeneratedFilePath = (fileType, options) => {
 
   let typeOption = fileType;
 
-  console.log('fileType:', fileType);
-
   if (fileType === 'style' && !options.view) {
     typeOption = 'component';
   } else if (options.view) {
