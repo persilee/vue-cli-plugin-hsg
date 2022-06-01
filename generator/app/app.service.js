@@ -192,8 +192,13 @@ const insertFileContent = (options = {}) => {
   const { fileContent, find, insert } = options;
   const lineIndex = fileContent.findIndex((line) => line.match(RegExp(find)));
 
+  const lineContent = fileContent[lineIndex];
+
   if (Array.isArray(insert)) {
     fileContent.splice(lineIndex + 1, 0, ...insert);
+  } else if (lineContent.endsWith('},')) {
+    const newline = lineContent.replace(/{/g, '{ ' + insert);
+    fileContent.splice(lineIndex, 1, newline);
   } else {
     fileContent.splice(lineIndex + 1, 0, insert);
   }
