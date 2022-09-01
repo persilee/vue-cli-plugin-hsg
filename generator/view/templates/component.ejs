@@ -1,20 +1,12 @@
+<script lang='ts' setup>
+
+</script>
+
 <template>
   <div class="page-layout">
     <%= componentNamePascalCase %>
   </div>
 </template>
-
-<script lang='ts'>
-  import { defineComponent } from 'vue';
-  export default defineComponent({
-    name: '<%= componentNamePascalCase %>',
-    components: {},
-    props: {},
-    setup() {
-      return {}
-    },
-  });
-</script>
 
 <style scoped>
   @import './styles/<%= componentName %>.css'
